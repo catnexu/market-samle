@@ -42,4 +42,17 @@ internal static class HostingExtensions
 
         return app;
     }
+
+    /*public static WebApplicationBuilder ConfigureAuthentication(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.TokenValidationParameters.ValidateAudience = false;
+            });
+
+        builder.Services.AddAuthorization();
+        return builder;
+    }*/
 }
