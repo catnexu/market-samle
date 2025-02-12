@@ -10,6 +10,15 @@ builder.Services.AddAuthentication()
         options.TokenValidationParameters.ValidateAudience = false;
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ApiScope", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope", "api1");
+    });
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -24,7 +33,7 @@ var summaries = new[]
 };
 
 app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
-    .RequireAuthorization();
+    .RequireAuthorization("ApiScope");
 
 app.Run();
 
