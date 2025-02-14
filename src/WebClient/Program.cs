@@ -21,7 +21,7 @@ internal class Program
                 options.Scope.Clear();
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
-
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.MapInboundClaims = false; // Don't rename claim types
 
                 options.SaveTokens = true;
