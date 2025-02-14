@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+
 internal class Program
 {
     public static void Main(string[] args)
@@ -21,6 +23,8 @@ internal class Program
                 options.Scope.Clear();
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
+                options.Scope.Add("verification");
+                options.ClaimActions.MapJsonKey("email_verified", "email_verified");
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.MapInboundClaims = false; // Don't rename claim types
 
