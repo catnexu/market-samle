@@ -1,7 +1,7 @@
-using System.Net.Http.Headers;
 using System.Text.Json;
+using Duende.AccessTokenManagement.OpenIdConnect;
+using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyApp.Namespace
@@ -12,16 +12,16 @@ namespace MyApp.Namespace
 
         public async Task OnGet()
         {
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync("https://localhost:6001/identity");
+            UserToken tokenInfo = await HttpContext.GetUserAccessTokenAsync();
+            HttpClient client = new HttpClient();
+            client.SetBearerToken(tokenInfo.AccessToken!);
 
-            var parsed = JsonDocument.Parse(content);
-            var formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions { WriteIndented = true });
+            string content = await client.GetStringAsync("https://localhost:6001/identity");
+
+            JsonDocument parsed = JsonDocument.Parse(content);
+            string formatted = JsonSerializer.Serialize(parsed, new JsonSerializerOptions {WriteIndented = true});
 
             Json = formatted;
         }
     }
-
 }
