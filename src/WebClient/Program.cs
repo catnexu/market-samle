@@ -36,7 +36,11 @@ internal class Program
 // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddOpenIdConnectAccessTokenManagement();
-
+        builder.Services.AddUserAccessTokenHttpClient("apiClient", configureClient: client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:6001");
+        });
+        
         var app = builder.Build();
 
 // Configure the HTTP request pipeline.
