@@ -22,7 +22,8 @@ try
     
     app.Run();
 }
-catch (Exception ex)
+// See https://github.com/dotnet/runtime/issues/60600 re StopTheHostException
+catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException")
 {
     Log.Fatal(ex, "Unhandled exception");
 }
