@@ -10,22 +10,29 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
+        
+        string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
 
-        var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
-        const string connectionString = @"Data Source=Duende.IdentityServer.Quickstart.EntityFramework.db";
-
-        builder.Services.AddIdentityServer()
-            .AddConfigurationStore(options =>
-            {
-                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddOperationalStore(options =>
-            {
-                options.ConfigureDbContext = b => b.UseSqlite(connectionString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddTestUsers(TestUsers.Users);
+        if (connectionString != null)
+        {
+            string? migrationsAssembly = typeof(Program).Assembly.GetName().Name;
+            builder.Services.AddIdentityServer()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddTestUsers(TestUsers.Users);
+        }
+        else
+        {
+            throw new Exception("Connection string is required");
+        }
 
         return builder.Build();
     }
