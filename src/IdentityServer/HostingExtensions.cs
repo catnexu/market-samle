@@ -11,7 +11,7 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
         
-        string? connectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
+        string? connectionString = builder.Configuration.GetConnectionString("SqliteConnection");
 
         if (connectionString != null)
         {
@@ -19,12 +19,12 @@ internal static class HostingExtensions
             builder.Services.AddIdentityServer()
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                    options.ConfigureDbContext = b => b.UseSqlite(connectionString,
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                    options.ConfigureDbContext = b => b.UseSqlite(connectionString,
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddTestUsers(TestUsers.Users);
