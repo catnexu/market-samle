@@ -11,6 +11,7 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
         
+        
         string? connectionString = builder.Configuration.GetConnectionString("SqliteConnection");
 
         if (connectionString != null)
