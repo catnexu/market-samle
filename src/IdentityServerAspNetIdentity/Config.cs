@@ -14,22 +14,23 @@ public static class Config
             new IdentityResource()
             {
                 Name = "verification",
-                UserClaims = new List<string> 
-                { 
+                UserClaims = new List<string>
+                {
                     JwtClaimTypes.Email,
                     JwtClaimTypes.EmailVerified
                 }
-            }
+            },
+            new IdentityResource("color", new[] {"favorite_color"})
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
-        { 
+        {
             new ApiScope(name: "api1", displayName: "My API")
         };
 
     public static IEnumerable<Client> Clients =>
-        new Client[] 
+        new Client[]
         {
             new Client
             {
@@ -45,21 +46,21 @@ public static class Config
                 },
 
                 // scopes that client has access to
-                AllowedScopes = { "api1" }
+                AllowedScopes = {"api1"}
             },
             // interactive ASP.NET Core Web App
             new Client
             {
                 ClientId = "web",
-                ClientSecrets = { new Secret("secret".Sha256()) },
+                ClientSecrets = {new Secret("secret".Sha256())},
 
                 AllowedGrantTypes = GrantTypes.Code,
-                
+
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                RedirectUris = {"https://localhost:5002/signin-oidc"},
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                PostLogoutRedirectUris = {"https://localhost:5002/signout-callback-oidc"},
 
                 AllowOfflineAccess = true,
 
@@ -68,7 +69,8 @@ public static class Config
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "verification",
-                    "api1"
+                    "api1",
+                    "color"
                 }
             }
         };
