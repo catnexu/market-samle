@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Duende.Bff.Yarp;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JavaScriptClient;
 
@@ -53,6 +55,23 @@ internal class Program
         app.UseAuthorization();
         app.MapBffManagementEndpoints();
 
+        // Uncomment this for Controller support
+        // app.MapControllers()
+        //     .AsBffApiEndpoint();
+
+        app.MapGet("/local/identity", LocalIdentityHandler)
+            .AsBffApiEndpoint();
+
+        app.MapRemoteBffApiEndpoint("/remote", "https://localhost:6001")
+            .RequireAccessToken(Duende.Bff.TokenType.User);
+        
         app.Run();
+    }
+    
+    [Authorize]
+    private static IResult LocalIdentityHandler(ClaimsPrincipal user)
+    {
+        var name = user.FindFirst("name")?.Value ?? user.FindFirst("sub")?.Value;
+        return Results.Json(new { message = "Local API Success!", user = name });
     }
 }
